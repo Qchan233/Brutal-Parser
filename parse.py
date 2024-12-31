@@ -29,34 +29,22 @@ def get_rule_to_expand(node):
             return rules[i][1] 
     return None
 
-input_words = ['a', 'b', 'c', 'd','eof']
-current_index = 0
-
-def get_word():
-    global current_index
-    if current_index < len(input_words):
-        word = input_words[current_index]
-        return word
-    return None
 
 def match(node, word):
     if node is None:
         return False
     return node.value == word
 
-status = True
-def parse():
-    global current_index
-    root = Node('S')
-    focus = root
-    prev_focus = focus
-    stack = [None]
-    root.prev_stack = 1
-    word = get_word()
+def parse(input_words):
+    def get_word():
+        if current_index < len(input_words):
+            word = input_words[current_index]
+            return word
+        return None
 
     def backtrack():
-        global current_index
-        global status
+        nonlocal current_index
+        nonlocal status
         nonlocal focus
         nonlocal stack
         nonlocal word
@@ -72,7 +60,16 @@ def parse():
 
         focus.children = []
         stack = stack[:focus.prev_stack]
-         
+
+    current_index = 0
+    root = Node('S')
+    focus = root
+    prev_focus = focus
+    stack = [None]
+    root.prev_stack = 1
+    word = get_word()
+    status = True
+
     
     while status:
         print("#########################")
@@ -121,8 +118,10 @@ def print_stack(stack):
     for node in stack[1:]:
         print(node.value)
 
+input_words = ['a', 'b', 'c', 'd','eof']
+
 # 开始解析
-root = parse()
+root = parse(input_words)
 if root:
     print("解析完成")
     print_tree(root)
